@@ -1,0 +1,33 @@
+/* styles.css */
+
+/* Apply global styling to the body */
+body {
+    font-family: 'Arial', sans-serif; /* Set the font family for the entire page */
+    margin: 20px; /* Provide a margin around the body */
+}
+
+/* Apply styling to all buttons */
+button {
+    margin: 10px; /* Add margin around all buttons */
+}
+
+/* Apply styling to the lessons container */
+.lessons-container {
+    display: flex; /* Use flexbox for layout */
+    flex-wrap: wrap; /* Allow items to wrap to the next line if needed */
+    background-color: rgb(255, 255, 255); /* Set background color to white */
+}
+
+/* Apply styling to individual lesson boxes */
+.lesson-box {
+    border: 1px solid #ccc; /* Add a border around each lesson box */
+    padding: 10px; /* Add padding inside each lesson box */
+    margin: 20px; /* Add margin around each lesson box */
+    width: 28%; /* Set the width of each lesson box */
+}
+
+/* Apply styling to the checkout container */
+.checkout-container {
+    max-width: 400px; /* Set the maximum width for the checkout container */
+    margin: 20px auto; /* Provide margin and auto center the checkout container */
+}
