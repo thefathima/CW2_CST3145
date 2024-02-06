@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require("path");
 //const bodyParser = require('body-parser)
 
 //Create an Express.js instance:
@@ -15,6 +16,31 @@ app.use((req, res, next) => {
 
     next();
 })
+// -----------------------------------------------------------------------------------
+//logger middleware
+app.use(function (req, res, next) {
+    console.log("In comes a " + req.method + " to " + req.url);
+    next();
+});
+
+// Static file middleware for serving images
+const imagePath = path.resolve(__dirname, "images");
+app.use('/images', express.static(imagePath));
+
+// Custom middleware for handling non-existent images only when the path starts with "/images"
+app.get('/images', (req, res, next) => {
+    // Check if the file exists
+    const filePath = path.join(imagePath, req.url);
+
+    if (!require('fs').existsSync(filePath)) { //checks if file exists in filePath
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end("Image not found");
+    } else {
+        // If the file exists, continue to the next middleware
+        next();
+    }
+});
+//-----------------------------------------------------------------------------------------
 
 const MongoClient = require('mongodb').MongoClient
 
