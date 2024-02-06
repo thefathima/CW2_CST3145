@@ -206,7 +206,7 @@
                 // Site name mounting the app
                 sitename: "After School Lessons",
                 // Contains an array of lesson data
-                lessons: lessons,
+                lessons: [],
                 // Flag to toggle between lesson display and shopping cart/checkout (flag is like a switch: when its true then it displays lessons, when its false = checkout page)
                 showProduct: true,
                 // Array to store items in the cart
@@ -228,7 +228,24 @@
 
                 // User input for lesson search
                 searchQuery: '', //its empty bc when u type it will check each character, checks the input
-            },
+            }, 
+            created:
+                //fetch GET
+                function () {
+                    // set the url to your server and route
+                    fetch('http://localhost:3000/collection/lessons', {
+                        method: 'GET', // set the HTTP method as 'GET'
+                        headers: {
+                            'Content-Type': 'application/json', // set the data type as JSON
+                        }
+                    })
+                        .then(res => {
+                            return res.json();
+                        })
+                        .then(data => {
+                            webstore.lessons = data;
+                        })
+                },
             methods: {
                 // This method is responsible for adding a lesson to the shopping cart
                 addToCart: function (lesson) { //lesson object as a parameter
