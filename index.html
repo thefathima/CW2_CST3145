@@ -345,15 +345,38 @@
                             },
                             body: JSON.stringify(newOrder), // need to stringify the JSON object
                         })
+                            .then(response => response.json()) // Parse response as JSON
+                            .then(function () {
+                                for (let i = 0; i < finalCart.length; i++) {
+                                    fetch("http://localhost:3000/collection/lessons/" + finalCart[i]._id, { // Fixed syntax error here
+                                        method: 'PUT',
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                        },
+                                        body: JSON.stringify({ "availability": lessons[i].availability - finalCart[i].quantity }),
+                                    })
+                                        .then(response => response.json()) // Parse response as JSON
+                                        .then(data => {
+                                            console.log(data); // Log response from PUT request
+                                        })
+                                        .catch(error => {
+                                            console.error('Error:', error);
+                                        });
+
+                                    console.log("Lessons array: ", lessons[i])
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+
                         // clears the shopping cart, indicating that the order has been successfully submitted 
                         this.cart = [];
                         //clears the user's input for full name and phone number after the order has been submitted.
                         this.order = {
                             fullName: '',
                             phone: '',
-
                         };
-
                     }
                 },
             },
