@@ -228,7 +228,7 @@
 
                 // User input for lesson search
                 searchQuery: '', //its empty bc when u type it will check each character, checks the input
-            }, 
+            },
             created:
                 //fetch GET
                 function () {
@@ -313,14 +313,48 @@
                 // AFTER ORDER IS SUBMITTED = ORDER SUBMITTED MESSAGE 
                 submitForm() {
                     alert('Order Submitted!');
-                    // clears the shopping cart, indicating that the order has been successfully submitted 
-                    this.cart = [];
-                    ////clears the user's input for full name and phone number after the order has been submitted.
-                    this.order = {
-                        fullName: '',
-                        phone: '',
 
-                    };
+                    postOrder(this.order.fullName, this.order.phone, this.cart);
+
+                    function postOrder(name, contact, orderCart) {
+                        var finalCart = [];
+
+                        for (let i = 0; i < orderCart.length; i++) {
+                            const uniqueCartOrder = { "_id": orderCart[i]._id, "lesson": orderCart[i].name, "quantity": 1 };
+
+                            let found = false;
+                            for (let j = 0; j < finalCart.length; j++) {
+                                if (finalCart[j]._id == orderCart[i]._id) {
+                                    found = true;
+                                    finalCart[j].quantity++;
+                                    break;
+                                }
+                            }
+
+                            if (!found) {
+                                finalCart.push(uniqueCartOrder);
+                            }
+                        }
+                        console.log(finalCart);
+
+                        const newOrder = { "order": finalCart, "name": name, "contact": contact }
+                        fetch('http://localhost:3000/collection/orders', {
+                            method: 'POST', // set the HTTP method as 'POST'
+                            headers: {
+                                'Content-Type': 'application/json', // set the data type as JSON
+                            },
+                            body: JSON.stringify(newOrder), // need to stringify the JSON object
+                        })
+                        // clears the shopping cart, indicating that the order has been successfully submitted 
+                        this.cart = [];
+                        //clears the user's input for full name and phone number after the order has been submitted.
+                        this.order = {
+                            fullName: '',
+                            phone: '',
+
+                        };
+
+                    }
                 },
             },
 
