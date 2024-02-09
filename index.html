@@ -67,22 +67,13 @@
 
             <!--IF SHOPPING CART IS NOT EMPTY: -->
             <div v-else>
-                <!-- Display shopping cart or checkout -->
                 <div class="cart-container">
-                    <!-- Display 'Shopping Cart' or 'Checkout' based on cart status -->
                     <h2>{{ cart.length > 0 ? 'Shopping Cart' : 'Checkout' }}</h2>
-                    <!--cart.length > 0 is true) tht means If there are items in the cart , it shows "Shopping Cart"; otherwise, it shows "Checkout"-->
-
-                    <!--(v-if) checks if cart is empty, if empty it displays msg below-->
+                
                     <div v-if="cart.length === 0">
-                        <!-- Display message if the shopping cart is empty -->
                         <p>Your shopping cart is empty.</p>
                     </div>
-
-                    <!--if the shopping cart is NOT empty: -->
                     <div v-else>
-                        <!-- Display items in the shopping cart -->
-                        <!--(v-for) iterates over each item in the cart array-->
                         <div v-for="cartLesson in cart" class="cart-item">
                             <h3>{{ cartLesson.name }}</h3>
                             <!-- Display price and button to remove from Cart -->
@@ -94,34 +85,22 @@
                     </div>
 
                     <!--CHECKOUT PAGE-->
-                    <!--checks if the length of the cart array is greater than 0-->
-                    <!--If true, the content inside this <div> will be displayed - indicating that there are items in the shopping cart-->
                     <div v-if="cart.length > 0">
 
                         <!-- Order information -->
                         <h2>Order Information</h2>
                         <p>
                             <strong>Full Name:</strong> <!--bold text-->
-
-                            <!-- Input for user's full name -->
-                            <!--(v-module) two-way binding on an input element-->
-                            <!-- It binds the input field value to a property in my Vue instance's data-->
                             <input v-model.trim="order.fullName" @input="validateFullName" />
-                            <!--(.trim)trims input (unintentional whitespaces are removed)-->
-                            <!--(order) = object in your Vue instance's data & (fullName) = property of the order object-->
-                            <!--user types or modifies the input, the validateFullName method is called.-->
-
-
-                            <!-- Validation message for full name -->
-                            <!--if validFullName is false (indicating invalid full name) and order.fullName is not an empty string.-->
+                            
                             <span v-if="!validFullName && order.fullName !== ''" class="validation-error">Please enter a
                                 valid full name with letters only.</span>
                         </p>
 
                         <p>
                             <strong>Phone Number:</strong>
-                            <!-- Input for user's phone number -->
                             <input v-model="order.phone" @input="validatePhone" />
+
                             <!-- Validation message for phone number -->
                             <span v-if="!validPhone && order.phone !== ''" class="validation-error">Please enter a valid
                                 phone number.</span>
@@ -164,7 +143,7 @@
                 validPhone: false,
 
                 // User input for lesson search
-                searchQuery: '', //its empty bc when u type it will check each character, checks the input
+                searchQuery: '', 
             },
             created:
                 //fetch GET
@@ -183,6 +162,7 @@
                             webstore.lessons = data;
                         })
                 },
+
             methods: {
                 // This method is responsible for adding a lesson to the shopping cart
                 addToCart: function (lesson) { //lesson object as a parameter
@@ -192,33 +172,24 @@
                         lesson.availability--;
                     }
                 },
-                // Toggle between lesson display and shopping cart/checkout
+              
                 toggleCart() {
-                    //!this.showProduct is a logical NOT operation, flipping the current boolean value of this.showProduct. If it's true, !true becomes false, and if it's false, !false becomes true
-                    //If this.showProduct = true the lessons will be displayed. 
-                    //After toggling, if it becomes false, the shopping cart/checkout section will be displayed, and vice versa.
                     this.showProduct = !this.showProduct;
                 },
 
 
                 // Check if lesson can be added to the cart
-                canAddToCart: function (lesson) { //lesson object as a parameter
-                    // if lesson's availability is greater than 0 = the method returns true
-                    // that means the lesson can be added to the cart
+                canAddToCart: function (lesson) { 
+                    
                     return lesson.availability > 0;
                 },
-
-
                 // Remove lesson from the cart
                 removeFromCart: function (lesson) {
-                    ////finds the index of the lesson in the cart array using the indexOf method
-                    //If the lesson is present in the cart, indexOf returns its index
-                    //If the lesson is not found, indexOf returns -1.
+                    
                     const index = this.cart.indexOf(lesson);
 
                     if (index !== -1) { //if index is not equal to -1
-                        //this.cart: Refers to the cart array in the Vue instance's data, splice method is used to modify the contents of an array by removing or replacing existing elements
-                        //removes one item from the cart array at the specified index.
+                       
                         this.cart.splice(index, 1);
 
                         //increments the availability of the specific lesson by 1 after removing it from the cart.
@@ -228,29 +199,18 @@
 
                 // Method to Validate full name using regex
                 validateFullName() {
-                    // regular expression - allows only letters (both uppercase and lowercase) and spaces
                     const regex = /^[A-Za-z\s]+$/;
-
-                    //test method is built-in method for regular expressions in JavaScript. 
-                    //It checks if the given string (this.order.fullName) matches the pattern defined by the regular expression (regex).
-                    //The result (truee/false) of the test is then assigned to this.validFullName
-                    //if fullname matches the regex pattern = (this.validFullName) will be true, otherwise false
                     this.validFullName = regex.test(this.order.fullName);
                 },
                 // Validate phone number using regex
                 validatePhone() {
-                    // Regular expression for allowing only digits (0-9)
                     const regex = /^[0-9]*$/;
-                    // Testing if the phone number matches the regex pattern
-                    //if validPhone is true = indicates that phone number follows the regex pattern.
                     this.validPhone = regex.test(this.order.phone);
-                    //regex test is assigned to the validPhone property of the Vue instance's data.
                 },
 
                 // AFTER ORDER IS SUBMITTED = ORDER SUBMITTED MESSAGE 
                 submitForm() {
                     alert('Order Submitted!');
-
                     postOrder(this.order.fullName, this.order.phone, this.cart);
 
                     function postOrder(name, contact, orderCart) {
@@ -320,81 +280,50 @@
 
 
             computed: {
-                // Computed Property Calculates the number of items in the cart
                 cartItemCount: function () {
-                    //(this.cart.length) represents the number of items in the shopping cart.
-                    // if (this.cart.length) has a value other than 0 = computed property returns the actual length
-                    // If (this.cart.length) is 0 = it returns an empty string ('')
+                   
                     return this.cart.length || '';
                 },
-
-                // Check if order information is valid
-                // (ValidOrderInfo) computed property is a function that returns the result of the logical AND (&&) operation between two boolean values: this.validFullName and this.validPhone
                 validOrderInfo: function () {
-                    //(this.validFullName) and (this.validPhone) are properties in the Vue instance's data 
-                    // they represent whether the full name and phone number are valid based on certain validation criteria (as defined by the validateFullName and validatePhone methods).
                     return this.validFullName && this.validPhone;
                 },
 
 
                 // Sort and filter lessons based on user input
                 sortedLessons: function () {
-                    // Sorting logic for lessons
-                    // retrieves the sorting attribute (this.sortAttribute) from the Vue instance's data.
-                    // The (this.sortAttribute) represents the property of the lessons by which the lessons should be sorted (e.g., "name," "location," "price," etc.).
-                    const attribute = this.sortAttribute; //sorting by name, under the data
-                    const order = this.sortOrder === "asc" ? 1 : -1; //1 is ascending, -1 is descending
+                    const attribute = this.sortAttribute;
+                    const order = this.sortOrder === "asc" ? 1 : -1;
 
-                    return this.lessons.slice(0).sort((a, b) => { //slice of 0 = starts traversing (going thru each letter of the alphabet one by one) from the first letter of name
-                        //a and b r two random variables I've declared
-                        let aValue = a[attribute]; //taking one alphabet letter and compared it with the other
+                    return this.lessons.slice(0).sort((a, b) => { 
+                        let aValue = a[attribute]; 
                         let bValue = b[attribute];
 
-                        if (typeof aValue === "string") { //checking the type of value is entered as the variable, if its a string force it to be lowercase
-                            aValue = aValue.toLowerCase(); //aValue is converted to lower case (if it is string)
-                            bValue = bValue.toLowerCase(); //to make the comparison more accurate, both the variables r lowercase (cz lower case has different values and uppercase have different values)
+                        if (typeof aValue === "string") { 
+                            aValue = aValue.toLowerCase(); 
+                            bValue = bValue.toLowerCase(); 
                         }
 
-                        if (aValue > bValue) { //if aValue is bigger than bValue
-                            return order; //then it is shown in ascending 
-                        } else if (aValue < bValue) { //if aValue is smaller than bValue
-                            return -order; //then it is shown in descending order
+                        if (aValue > bValue) { 
+                            return order; 
+                        } else if (aValue < bValue) { 
+                            return -order; 
                         }
 
-                        return 0; //ends the function
+                        return 0; 
                     });
                 },
 
 
                 // Unique Search function for "Search as you type"
                 filteredLessons: function () {
-                    //(this.searchQuery)refers to the user's input in the search bar.
-                    // It's a property in the Vue instance's data, representing the text that the user has entered for searching lessons.
-                    //(toLowerCase) JavaScript string method that converts all the characters in a string to lowercase.
-                    //By applying toLowerCase() to this.searchQuery, the user's input is converted to lowercase characters.
-                    //The result of this.searchQuery.toLowerCase() is stored in the variable query.
-                    //So, (query) now holds the lowercase version of the user's search input.
                     const query = this.searchQuery.toLowerCase();
+                    if (!query) return this.sortedLessons; 
 
-                    //(!query) NOT operator used - checks if the user's search query is an empty string.
-                    //If the condition !query is true, indicating that the search query is empty, the computed property returns all lessons without filtering.
-                    //in this case - it returns the result of (this.sortedLessons), which is the array of lessons sorted based on the user's sorting preferences.               
-                    //helps to avoid unnecessary filtering when the user hasn't initiated a search. It ensures that, by default, all lessons are displayed when there's no specific search criteria.
-                    if (!query) return this.sortedLessons; // If the query is empty, return all lessons
-
-                    //(.filter) method is an array method in JavaScript - creates a new array containing elements from the original array 
-                    //(lesson =>) arrow function takes each element of this.sortedLessons as lesson and executes the code within the curly braces.
                     return this.sortedLessons.filter(lesson => {
-                        // each lesson, it retrieves the name  and converts them to lowercase using toLowerCase().
                         const lessonName = lesson.name.toLowerCase();
-                        // each lesson, it retrieves the location and converts them to lowercase using toLowerCase().
                         const lessonLocation = lesson.location.toLowerCase();
-
-                        //checks whether either the lesson name or the lesson location includes the search query.
-                        //it returns true if the search query is found within the lesson name or location.
                         return lessonName.includes(query) || lessonLocation.includes(query);
-                        //resulting array from this filter operation represents lessons that match the user's search criteria.
-                        //This array is then used to dynamically display only the relevant lessons on the website based on the user's input.
+                        
                     });
                 },
                 searchedresult() {
