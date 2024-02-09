@@ -50,7 +50,7 @@
             </select>
             <!--SEARCH BAR-->
             <!--(type="text"): This sets the input field to accept text-->
-            <input type="text" v-model.trim="searchQuery" placeholder="Search lessons">
+            <input type="text" v-model.trim="searchQuery" @input="searchedresult" placeholder="Search lessons">
             <!--v-model="searchQuery": establishes a two-way binding between the input field and the searchQuery variable in the Vue instance-->
             <!--As the user types into the search bar, the searchQuery variable is automatically updated with the input.-->
 
@@ -78,7 +78,7 @@
                     <!-- DISPLAY EACH LESSON (LOOP THROUGH) -->
 
                     <!--(v-for) creating a loop that goes through each lesson in the filteredLessons array.-->
-                    <div v-for="lesson in searchedresult" class="lesson-box">
+                    <div v-for="lesson in lessons" class="lesson-box">
 
                         <!-- Lesson details -->
                         <h2>{{ lesson.name }}</h2>
@@ -207,7 +207,6 @@
                 sitename: "After School Lessons",
                 // Contains an array of lesson data
                 lessons: [],
-                searchedlessons: [],
                 // Flag to toggle between lesson display and shopping cart/checkout (flag is like a switch: when its true then it displays lessons, when its false = checkout page)
                 showProduct: true,
                 // Array to store items in the cart
@@ -471,7 +470,7 @@
                             function (res) {
                                 res.json().then(
                                     function (json) {
-                                        webstore.searchedlessons = JSON.parse(JSON.stringify(json));
+                                        webstore.lessons = JSON.parse(JSON.stringify(json));
                                         console.log(JSON.parse(JSON.stringify(json)));
                                         return json;
                                     });
