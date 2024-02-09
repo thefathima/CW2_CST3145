@@ -16,7 +16,6 @@ app.use((req, res, next) => {
 
     next();
 })
-// -----------------------------------------------------------------------------------
 //logger middleware
 app.use(function (req, res, next) {
     console.log("In comes a " + req.method + " to " + req.url);
@@ -40,7 +39,6 @@ app.get('/images', (req, res, next) => {
         next();
     }
 });
-//-----------------------------------------------------------------------------------------
 
 const MongoClient = require('mongodb').MongoClient
 
@@ -100,7 +98,7 @@ app.put('/collection/:collectionName/:id', (req, res, next) => {
         }
     )
 })
-//GET request with a search query
+//GET request for the search query
 app.get('/collection/:collectionName/search/:k', (req, res) => {
     var key_1 = req.params.k.toLowerCase();
     console.log("Searched term: " + key_1);
