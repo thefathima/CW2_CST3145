@@ -2,127 +2,64 @@
 <html lang="en">
 
 <head>
-    <!-- Set the title of the HTML document -->
     <title>After School Lessons</title>
-    <!-- Link to the external stylesheet for styling -->
     <link rel="stylesheet" href="styles.css">
-    <!-- This is the link to the Vue.js library -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
-    <!-- This is linking the JavaScript file containing lessons data -->
     <script src="lessons.js"></script>
 </head>
 
 <body>
-    <!-- Vue.js app container -->
-    <!--creating a new vue instance with the element named as app -->
-    <div id="app"> <!--anchor point for Vue.js to mount and control the application-->
-        <main> <!--main content of my web page-->
-
+    <div id="app">  
+        <main> 
             <!-- Display site name using mustache syntax-->
             <h1>{{sitename}}</h1>
-            <!--syntax for data binding (dynamically updates when value of 'sitename' variable changes)-->
 
             <!-- Label for the sort dropdown -->
             <label for="sortAttribute">Sort by:</label>
-
-            <!-- Dropdown for selecting sorting attribute -->
-            <!--v-model="sortattribute" is a vue.js directive - it creates 2 way binding b/w sortAttribute in data & select element-->
-            <!--if the user selects an option, sortAttribute in my Vue.js instance will be updated, and vice versa-->
             <select v-model="sortAttribute" id="sortAttribute">
                 <option value="name">Subject</option>
                 <option value="location">Location</option>
                 <option value="price">Price</option>
                 <option value="availability">Spaces</option>
-                <!--<option> Elements: are individual options within the dropdown. -->
-                <!--Each option has a value attribute representing the sorting attribute, and the text content inside the <option> tag is what the user sees in the dropdown menu.-->
             </select>
 
-            <!-- Dropdown for selecting sorting order -->
-            <!---->
             <label for="sortOrder">Order:</label>
 
-            <!-- v-model="sortOrder" establishes a two-way binding between the dropdown and the data in the Vue instance-->
             <select v-model="sortOrder" id="sortOrder">
-                <!--Ascending" is chosen, lessons will be sorted from the smallest to the largest-->
                 <option value="asc">Ascending</option>
                 <option value="desc">Descending</option>
-                <!--user selects an option, the sortOrder variable is updated with the chosen value.-->
             </select>
-            <!--SEARCH BAR-->
-            <!--(type="text"): This sets the input field to accept text-->
             <input type="text" v-model.trim="searchQuery" @input="searchedresult" placeholder="Search lessons">
-            <!--v-model="searchQuery": establishes a two-way binding between the input field and the searchQuery variable in the Vue instance-->
-            <!--As the user types into the search bar, the searchQuery variable is automatically updated with the input.-->
-
-
-            <!-- SHOPPING CART BUTTON -->
-            <!--(v-on:click='toggleCart') Vue.js directive - listens for a click event
-            When the button is clicked, it triggers the toggleCart method in the Vue instance.-->
+           
             <button v-on:click='toggleCart' :disabled="cart.length === 0">
-                <!--(disabled="cart.length === 0") Vue.js directive - for dynamic attribute binding
-            disables button if the condition cart.length === 0 evaluates to true. (if the shopping cart is empty, the button is disabled; otherwise, it's enabled)-->
                 {{cartItemCount}}
-                <!--computed property in the Vue instance that dynamically calculates and updates the number of items in the shopping cart.-->
                 <span class="fas fa-cart-plus"></span> Shopping Cart
             </button>
 
             <!--LESSON DISPLAY-->
-
-            <!--(<div v-if='showProduct'>) Vue.js directive used for conditional rendering-->
-            <div v-if='showProduct'> <!--inside data object if showProduct=true then all lessons are displayed-->
-
-                <!-- Display lessons -->
-                <div class="lessons-container"> <!--hold and structure the display of lessons (CSS file)-->
-
-
-                    <!-- DISPLAY EACH LESSON (LOOP THROUGH) -->
-
-                    <!--(v-for) creating a loop that goes through each lesson in the filteredLessons array.-->
+            <div v-if='showProduct'> 
+                <div class="lessons-container">
                     <div v-for="lesson in lessons" class="lesson-box">
 
                         <!-- Lesson details -->
                         <h2>{{ lesson.name }}</h2>
-
-                        <!-- Display lesson image -->
-                        <!-- v-bind used for binding attributes to expressions. (Binds src attribute of the <img> element to the value of lesson.image.-->
-                        <!-- inside the loop so it iterates through the whole loop -->
                         <figure>
                             <img v-bind:src="lesson.image" style="height:250px; width:250px">
                         </figure>
 
-
-                        <!--LOCATION/PRICE/AVAILABILITY DETAILS-->
-
-                        <!--Vue.js expressions enclosed in double curly braces ({{ }}), and they are used for data binding-->
-                        <!-- these expressions are replaced with the actual values from the Vue instance's data.-->
                         <p>Location: {{ lesson.location }}</p>
-                        <!--{{lesson.location}} replaced with the value of the location property of the lesson object-->
                         <p>Price: {{ lesson.price }} AED</p>
-                        <!--{{lesson.price}} replaced with the value of the price property of the lesson object followed by AED-->
                         <p>Availability: {{ lesson.availability }} spaces</p>
-                        <!--{{lesson.availability}} replaced with the value of the availability property of the lesson object followed by spaces-->
 
-
-                        <!-- DISPLAY STAR RATING BASED ON LESSON RATING -->
                         <div>
-                            <!--if lesson.rating is 3, it will generate three filled stars.-->
                             <span v-for="n in lesson.rating" class="star">★</span>
-
-                            <!--it calculates the number of empty stars needed by subtracting lesson.rating from 5-->
-                            <!--eg: if lesson.rating is 3, it will generate two empty stars to complete the total of five stars-->
                             <span v-for="n in 5 - lesson.rating" class="star">☆</span>
                         </div>
-                        <!-- ADD TO CART BUTTON -->
-                        <!--(v-on) listenS for a click event on the button. When the button is clicked, it triggers the addToCart method-->
+                     
                         <button v-on:click='addToCart(lesson)' :disabled="!canAddToCart(lesson)">
-                            <!--(disabled) dynamic binding that sets the button to a disabled state based on the result of the canAddToCart method-->
-                            <!--if canAddToCart = false then button is disabled, if true = enabled-->
+                            
                             Add to Cart
                         </button>
-
-                        <!--DISPLAY OUT OF STOCK MSG IF AVAILABILITY/SPACES = 0 -->
-
-                        <!--(v-if)checks whether the availability property of the current lesson is equal to 0, if true "out of stock" displayed-->
                         <span v-if="lesson.availability === 0" class="out-of-stock">Out of stock</span>
                     </div>
                 </div>
