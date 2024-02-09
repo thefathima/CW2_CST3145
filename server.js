@@ -82,11 +82,11 @@ app.post('/collection/:collectionName', (req, res, next) => {
 //after u write this piece of code, then go to the terminal and type node server.js
 const ObjectID = require('mongodb').ObjectID;
 app.get('/collection/:collectionName/:id', (req, res, next) => {
-        req.collection.findOne({ _id: new ObjectID(req.params.id) }, (e, result) => {
-            if (e) return next(e)
-            res.send(result)
-        })
+    req.collection.findOne({ _id: new ObjectID(req.params.id) }, (e, result) => {
+        if (e) return next(e)
+        res.send(result)
     })
+})
 //this peice of code is to update anything inside products so eg: price u can just update it using this code
 //after u write this piece of code, then go to the terminal and type node server.js
 app.put('/collection/:collectionName/:id', (req, res, next) => {
@@ -100,6 +100,22 @@ app.put('/collection/:collectionName/:id', (req, res, next) => {
         }
     )
 })
+//GET request with a search query
+app.get('/collection/:collectionName/search/:k', (req, res) => {
+    var key_1 = req.params.k.toLowerCase();
+    console.log("Searched term: " + key_1);
+
+    req.collection.find(
+        {
+            $or: [
+                { name: { $regex: new RegExp(key_1, "i") } },
+            {location: {$regex: new RegExp(key_1, "i")}}]
+        })
+        .toArray((e, results) => {
+            if (e) return console.log(e)
+            res.send(results);
+        });
+});
 
 const port = process.env.PORT || 3000
 app.listen(port)
